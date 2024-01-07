@@ -54,6 +54,7 @@ __host__ void KernelInterface::forward_kernel(float *output_data, const float *i
                                               const int num_samples, const int output_channel, const int input_channel,
                                               const int height_in, const int width_in, const int kernel_height)
 {
+    std::cout << "Basic GPU Convolution layer." << std::endl;
     const int height_out = height_in - kernel_height + 1;
     const int width_out = width_in - kernel_height + 1;
 
