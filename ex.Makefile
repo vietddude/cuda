@@ -53,11 +53,6 @@ kernel_2:
 	nvcc -arch=sm_75 --compile src/layer/kernel/kernel.cu -o src/layer/kernel/kernel.o -I./ -L/usr/local/cuda/lib64 -lcudart 
 	nvcc -arch=sm_75 --compile src/layer/kernel/kernel_forward_2.cu -o src/layer/kernel/kernel_forward.o -I./ -L/usr/local/cuda/lib64 -lcudart
 
-kernel_3: 
-	rm -f src/layer/kernel/*.o
-	nvcc -arch=sm_75 --compile src/layer/kernel/kernel.cu -o src/layer/kernel/kernel.o -I./ -L/usr/local/cuda/lib64 -lcudart 
-	nvcc -arch=sm_75 --compile src/layer/kernel/kernel_forward_3.cu -o src/layer/kernel/kernel_forward.o -I./ -L/usr/local/cuda/lib64 -lcudart
-
 loss: src/loss/cross_entropy_loss.cc src/loss/mse_loss.cc
 	nvcc -arch=sm_75 --compile src/loss/cross_entropy_loss.cc -o src/loss/cross_entropy_loss.o -I./ -L/usr/local/cuda/lib64 -lcudart
 	nvcc -arch=sm_75 --compile src/loss/mse_loss.cc -o src/loss/mse_loss.o -I./ -L/usr/local/cuda/lib64 -lcudart
@@ -66,7 +61,7 @@ optimizer: src/optimizer/sgd.cc
 	nvcc -arch=sm_75 --compile src/optimizer/sgd.cc -o src/optimizer/sgd.o -I./ -L/usr/local/cuda/lib64 -lcudart
 
 clean:
-	rm -f demo train test
+	rm -f train test
 	rm -f *.o src/*.o src/layer/*.o src/loss/*.o src/optimizer/*.o src/layer/kernel/*.o
 
 setup:
