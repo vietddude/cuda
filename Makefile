@@ -90,7 +90,8 @@ OPTIMIZER_SRCS = src/optimizer/sgd.cc
 KERNEL_SRCS = src/layer/kernel/kernel.cu src/layer/kernel/kernel_forward.cu src/layer/kernel/kernel_forward_1.cu src/layer/kernel/kernel_forward_2.cu
 
 # Object files
-OBJS = $(SRCS:.cc=.o) $(DNN_SRCS:.cc=.o)
+OBJS = $(SRCS:.cc=.o) 
+DNN_OBJS = $(DNN_SRCS:.cc=.o)
 NETWORK_OBJS = $(NETWORK_SRCS:.cc=.o)
 MNIST_OBJS = $(MNIST_SRCS:.cc=.o)
 LAYER_OBJS = $(LAYER_SRCS:.cc=.o)
@@ -99,10 +100,10 @@ OPTIMIZER_OBJS = $(OPTIMIZER_SRCS:.cc=.o)
 KERNEL_OBJS = $(KERNEL_SRCS:.cu=.o)
 
 # Targets
-test: test.o $(OBJS) $(NETWORK_OBJS) $(MNIST_OBJS) $(LAYER_OBJS) $(LOSS_OBJS) $(OPTIMIZER_OBJS) $(KERNEL_OBJS)
+test: test.o $(OBJS) $(DNN_OBJS) $(NETWORK_OBJS) $(MNIST_OBJS) $(LAYER_OBJS) $(LOSS_OBJS) $(OPTIMIZER_OBJS) $(KERNEL_OBJS)
 	$(NVCC) $(NVCC_FLAGS) -o $@ -lm -lcuda -lrt $^ $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB)
 
-train: train.o $(OBJS) $(NETWORK_OBJS) $(MNIST_OBJS) $(LAYER_OBJS) $(LOSS_OBJS) $(OPTIMIZER_OBJS) $(KERNEL_OBJS)
+train: train.o $(OBJS) $(DNN_OBJS) $(NETWORK_OBJS) $(MNIST_OBJS) $(LAYER_OBJS) $(LOSS_OBJS) $(OPTIMIZER_OBJS) $(KERNEL_OBJS)
 	$(NVCC) $(NVCC_FLAGS) -o $@ -lm -lcuda -lrt $^ $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB)
 
 # Compile C++ source files
@@ -121,6 +122,9 @@ clean:
 	rm -f *.o src/*.o src/layer/*.o src/loss/*.o src/optimizer/*.o src/layer/kernel/*.o
 
 setup: network.o mnist.o layer loss optimizer
+
+dnn.o: ${DNN_SRCS}
+	$(NVCC) $(NVCC_FLAGS) --compile $^ $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB) -o $@
 
 network.o: $(NETWORK_SRCS)
 	$(NVCC) $(NVCC_FLAGS) --compile $^ $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB) -o $@
