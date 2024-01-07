@@ -121,7 +121,7 @@ clean:
 	rm -f train test
 	rm -f *.o src/*.o src/layer/*.o src/loss/*.o src/optimizer/*.o src/layer/kernel/*.o
 
-setup: network.o mnist.o layer loss optimizer
+setup: dnn.o network.o mnist.o layer loss optimizer
 
 dnn.o: ${DNN_SRCS}
 	$(NVCC) $(NVCC_FLAGS) --compile $^ $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB) -o $@
