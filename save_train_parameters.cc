@@ -74,7 +74,7 @@ int main()
   const int batch_size = 128;
   for (int epoch = 0; epoch < n_epoch; epoch++)
   {
-    dnn.save_parameters("./model/weights-86.bin");
+    dnn.save_parameters("./model/layer-parameters.bin");
     shuffle_data(dataset.train_data, dataset.train_labels);
     for (int start_idx = 0; start_idx < n_train; start_idx += batch_size)
     {
@@ -108,7 +108,7 @@ int main()
     std::cout << std::endl;
   }
 
-  dnn.save_parameters("./model/weights-86.bin");
+  dnn.save_parameters("./model/layer-parameters.bin");
 
   return 0;
 }

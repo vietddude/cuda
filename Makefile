@@ -1,4 +1,11 @@
 ##############################################################################
+test_cpu: test_cpu.o
+	nvcc -arch=sm_75 -o test_cpu -lm -lcuda -lrt test_cpu.o src/network.o src/mnist.o src/layer/*.o src/loss/*.o src/optimizer/*.o src/layer/kernel/*.o -I./ -L/usr/local/cuda/lib64 -lcudart
+
+test_cpu.o: test_cpu.cc
+	nvcc -arch=sm_75 --compile test_cpu.cc -I./ -L/usr/local/cuda/lib64 -lcudart
+
+##############################################################################
 test: test.o
 	nvcc -arch=sm_75 -o test -lm -lcuda -lrt test.o src/network.o src/mnist.o src/layer/*.o src/loss/*.o src/optimizer/*.o src/layer/kernel/*.o -I./ -L/usr/local/cuda/lib64 -lcudart
 
@@ -53,13 +60,17 @@ optimizer: src/optimizer/sgd.cc
 	nvcc -arch=sm_75 --compile src/optimizer/sgd.cc -o src/optimizer/sgd.o -I./ -L/usr/local/cuda/lib64 -lcudart
 
 clean:
-	rm -f save_train_parameters test
+	rm -f save_train_parameters test test_cpu
 	rm -f *.o src/*.o src/layer/*.o src/loss/*.o src/optimizer/*.o src/layer/kernel/*.o
 
 clean_test:
 	rm -f save_train_parameters test
 	rm -f *.o 
 
+clean_test_cpu:
+	rm -f test_cpu
+	rm -f *.o 
+	
 setup:
 	make network.o
 	make mnist.o

@@ -30,13 +30,16 @@ int main()
     dataset.read();
     int n_train = dataset.train_data.cols();
     int dim_in = dataset.train_data.rows();
+    std::cout << "mnist train number: " << n_train << std::endl;
+    std::cout << "mnist test number: " << dataset.test_labels.cols() << std::endl;
 
     float accuracy = 0.0;
-    Network dnn2 = dnn_Kernel();
-    dnn2.load_parameters("./model/layer-parameters.bin");
-    dnn2.forward(dataset.test_data);
-    accuracy = compute_accuracy(dnn2.output(), dataset.test_labels);
-    std::cout << "GPU accuracy: " << accuracy << std::endl;
+    std::cout << "==============================" << std::endl;
 
+    Network dnn1 = dnn_CPU();
+    dnn1.load_parameters("./model/layer-parameters.bin");
+    dnn1.forward(dataset.test_data);
+    accuracy = compute_accuracy(dnn1.output(), dataset.test_labels);
+    std::cout << "CPU accuracy: " << accuracy << std::endl;
     return 0;
 }
