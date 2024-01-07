@@ -2,7 +2,10 @@
 #include <iostream>
 #include <cmath>
 
-__global__ void forward_gpu_tiled(float *output, const float *input, const float *kernel, const float *bias,
+#define TILE_WIDTH 32
+#define CONV_KERNEL_SIZE 5
+
+__global__ void forward_gpu_tiled(float *output, const float *input, const float *kernel,
                                   const int num_samples, const int output_channel, const int input_channel,
                                   const int height, const int width, const int kernel_size)
 {
@@ -92,9 +95,9 @@ __host__ void KernelInterface::forward_kernel(float *output_data, const float *i
     CHECK(cudaMalloc(&device_weight, output_channel * input_channel * kernel_height * kernel_height * sizeof(float))); // input_channel * output_channel filter Maps of size kernel_height * kernel_height
     CHECK(cudaMalloc((void **)&device_bias, output_channel * sizeof(float)));
     // Copy input and mask data to device
-    CHECK(cudaMemcpy(device_input, input_data, num_samples * input_channel * height_in * width_in * sizeof(float), cudaMemcpyHostToDevice));
-    CHECK(cudaMemcpy(device_weight, weight_data, output_channel * input_channel * kernel_height * kernel_height * sizeof(float), cudaMemcpyHostToDevice));
-    CHECK(cudaMemcpy(device_bias, bias_data, output_channel * sizeof(float), cudaMemcpyHostToDevice));
+    cudaMemcpy(device_input, input_data, num_samples * input_channel * height_in * width_in * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(device_weight, weight_data, output_channel * input_channel * kernel_height * kernel_height * sizeof(float), cudaMemcpyHostToDevice);
+
     //
     dim3 blockSize(height_in, width_in, 1);
     int height_grid = (height_out - 1) / height_in + 1;
@@ -102,8 +105,7 @@ __host__ void KernelInterface::forward_kernel(float *output_data, const float *i
     int z = height_grid * width_grid;
     dim3 gridSize(num_samples, output_channel, z);
 
-    size_t smem = ((height_in + kernel_height - 1) * (width_in + kernel_height - 1) + kernel_height * kernel_height) * sizeof(float);
-    forward_gpu_tiled<<<gridSize, blockSize, smem>>>(device_output, device_input, device_weight, device_bias, num_samples, output_channel, input_channel, height_in, width_in, kernel_height);
+    forward_gpu_tiled<<<gridSize, blockSize>>>(device_output, device_input, device_weight, num_samples, output_channel, input_channel, height_in, width_in, kernel_height);
     cudaError_t errSync = cudaGetLastError();
     cudaError_t errAsync = cudaDeviceSynchronize();
     if (errSync != cudaSuccess)
