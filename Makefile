@@ -147,4 +147,5 @@ kernel_1: $(KERNEL_OBJS)
 
 kernel_2: $(KERNEL_OBJS)
 	rm -f src/layer/kernel/*.o
-	nvcc -arch=sm_75 --compile src/layer/kernel/kernel.cu
+	nvcc -arch=sm_75 --compile src/layer/kernel/kernel.cu -o src/layer/kernel/kernel.o $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB)
+	nvcc -arch=sm_75 --compile src/layer/kernel/kernel_forward_2.cu -o src/layer/kernel/kernel_forward.o $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB)
