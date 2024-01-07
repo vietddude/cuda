@@ -3,19 +3,7 @@
 #include <cmath>
 
 #define TILE_WIDTH 32
-#define CONV_KERNEL_SIZE 13
-
-#define CHECK(call)                                                \
-    {                                                              \
-        const cudaError_t error = call;                            \
-        if (error != cudaSuccess)                                  \
-        {                                                          \
-            fprintf(stderr, "Error: %s:%d, ", __FILE__, __LINE__); \
-            fprintf(stderr, "code: %d, reason: %s\n", error,       \
-                    cudaGetErrorString(error));                    \
-            exit(EXIT_FAILURE);                                    \
-        }                                                          \
-    }
+#define CONV_KERNEL_SIZE 5
 
 __global__ void forward_gpu_tiled(float *output, const float *input, const float *kernel,
                                   const int num_samples, const int output_channel, const int input_channel,
@@ -94,13 +82,13 @@ __global__ void forward_gpu_tiled(float *output, const float *input, const float
     }
 }
 
-__host__ void KernelInterface::conv_forward_gpu_full(float *output_data, const float *input_data, const float *weight_data,
-                                                     const int num_samples, const int output_channel, const int input_channel,
-                                                     const int height_in, const int width_in, const int kernel_height)
+__host__ void KernelInterface::forward_kernel(float *output_data, const float *input_data, const float *weight_data,
+                                              const int num_samples, const int output_channel, const int input_channel,
+                                              const int height_in, const int width_in, const int kernel_height)
 {
     const int height_out = height_in - kernel_height + 1;
     const int width_out = width_in - kernel_height + 1;
-    std::cout << "SMEM GPU Convolution layer." << std::endl;
+
     // Allocate device memory
     float *device_input, *device_output, *device_weight;
     cudaMalloc(&device_input, num_samples * input_channel * height_in * width_in * sizeof(float));              // input features map is input_channel
@@ -116,9 +104,9 @@ __host__ void KernelInterface::conv_forward_gpu_full(float *output_data, const f
     int height_grid = (height_out - 1) / TILE_WIDTH + 1;
     int width_grid = (width_out - 1) / TILE_WIDTH + 1;
     int z = height_grid * width_grid;
-    dim3 grizSize(num_samples, output_channel, z);
+    dim3 gridSize(num_samples, output_channel, z);
 
-    forward_gpu_tiled<<<blockSize, grizSize>>>(device_output, device_input, device_weight, num_samples, output_channel, input_channel, height_in, width_in, kernel_height);
+    forward_gpu_tiled<<<gridSize, blockSize>>>(device_output, device_input, device_weight, num_samples, output_channel, input_channel, height_in, width_in, kernel_height);
     cudaError_t errSync = cudaGetLastError();
     cudaError_t errAsync = cudaDeviceSynchronize();
     if (errSync != cudaSuccess)

@@ -78,7 +78,10 @@ void Conv::forward(const Matrix &bottom)
   }
   timer.Stop();
   float duration_layer = timer.Elapsed();
-  std::cout << "Convolution layer CPU time: " << duration_layer << " ms" << std::endl;
+  if (channel_in == 1)
+    std::cout << "[Convolution layer 1] - CPU time: " << duration_layer << " ms" << std::endl;
+  else
+    std::cout << "[Convolution layer 3] - CPU time: " << duration_layer << " ms" << std::endl;
 }
 
 // col2im, used for grad_bottom

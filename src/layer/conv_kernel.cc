@@ -47,7 +47,10 @@ void Conv_Kernel::forward(const Matrix &bottom)
 
     timer.Stop();
     float duration_layer = timer.Elapsed();
-    std::cout << "Convolution layer kernel time: " << duration_layer << " ms" << std::endl;
+    if (channel_in == 1)
+        std::cout << "[Convolution layer 1] - Kernel time: " << duration_layer << " ms" << std::endl;
+    else
+        std::cout << "[Convolution layer 3] - Kernel time: " << duration_layer << " ms" << std::endl;
 }
 
 // im2col, used for bottom

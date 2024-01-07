@@ -7,16 +7,13 @@ test.o: test.cc
 
 ##############################################################################
 
-train: train.o 
-	nvcc -arch=sm_75 -o train -lm -lcuda -lrt train.o src/network.o src/mnist.o src/layer/*.o src/loss/*.o src/optimizer/*.o src/layer/kernel/*.o -I./ -L/usr/local/cuda/lib64 -lcudart
+save_train_parameters: save_train_parameters.o 
+	nvcc -arch=sm_75 -o save_train_parameters -lm -lcuda -lrt save_train_parameters.o src/network.o src/mnist.o src/layer/*.o src/loss/*.o src/optimizer/*.o src/layer/kernel/*.o -I./ -L/usr/local/cuda/lib64 -lcudart
 
-train.o: train.cc
-	nvcc -arch=sm_75 --compile train.cc -I./ -L/usr/local/cuda/lib64 -lcudart
+save_train_parameters.o: save_train_parameters.cc
+	nvcc -arch=sm_75 --compile save_train_parameters.cc -I./ -L/usr/local/cuda/lib64 -lcudart
 
 ############################################################################
-# dnn.o: dnn.cc
-# 	nvcc -arch=sm_75 --compile dnn.cc -I./ -L/usr/local/cuda/lib64 -lcudart
-
 network.o: src/network.cc
 	nvcc -arch=sm_75 --compile src/network.cc -o src/network.o -I./ -L/usr/local/cuda/lib64 -lcudart
 
@@ -36,7 +33,7 @@ layer: src/layer/conv.cc src/layer/ave_pooling.cc src/layer/fully_connected.cc s
 kernel_0: 
 	rm -f src/layer/kernel/*.o
 	nvcc -arch=sm_75 --compile src/layer/kernel/kernel.cu -o src/layer/kernel/kernel.o -I./ -L/usr/local/cuda/lib64 -lcudart 
-	nvcc -arch=sm_75 --compile src/layer/kernel/kernel_forward.cu -o src/layer/kernel/kernel_forward.o -I./ -L/usr/local/cuda/lib64 -lcudart
+	nvcc -arch=sm_75 --compile src/layer/kernel/kernel_forward_0.cu -o src/layer/kernel/kernel_forward.o -I./ -L/usr/local/cuda/lib64 -lcudart
 
 kernel_1: 
 	rm -f src/layer/kernel/*.o
@@ -56,7 +53,7 @@ optimizer: src/optimizer/sgd.cc
 	nvcc -arch=sm_75 --compile src/optimizer/sgd.cc -o src/optimizer/sgd.o -I./ -L/usr/local/cuda/lib64 -lcudart
 
 clean:
-	rm -f train test
+	rm -f save_train_parameters test
 	rm -f *.o src/*.o src/layer/*.o src/loss/*.o src/optimizer/*.o src/layer/kernel/*.o
 
 setup:
