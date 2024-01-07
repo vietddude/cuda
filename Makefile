@@ -1,5 +1,6 @@
 ##############################################################################
 test: test.o
+	rm -f test.o test
 	nvcc -arch=sm_75 -o test -lm -lcuda -lrt test.o src/network.o src/mnist.o src/layer/*.o src/loss/*.o src/optimizer/*.o src/layer/kernel/*.o -I./ -L/usr/local/cuda/lib64 -lcudart
 
 test.o: test.cc
@@ -9,6 +10,7 @@ test.o: test.cc
 ##############################################################################
 
 save_train_parameters: save_train_parameters.o 
+	rm -f save_train_parameters.o save_train_parameters
 	nvcc -arch=sm_75 -o save_train_parameters -lm -lcuda -lrt save_train_parameters.o src/network.o src/mnist.o src/layer/*.o src/loss/*.o src/optimizer/*.o src/layer/kernel/*.o -I./ -L/usr/local/cuda/lib64 -lcudart
 
 save_train_parameters.o: save_train_parameters.cc
