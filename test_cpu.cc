@@ -34,12 +34,11 @@ int main()
     std::cout << "mnist test number: " << dataset.test_labels.cols() << std::endl;
 
     float accuracy = 0.0;
-    std::cout << "==============================" << std::endl;
-
     Network dnn1 = dnn_CPU();
     dnn1.load_parameters("./model/layer-parameters.bin");
     dnn1.forward(dataset.test_data);
     accuracy = compute_accuracy(dnn1.output(), dataset.test_labels);
+    std::cout << "----------------------------------------\n";
     std::cout << "CPU accuracy: " << accuracy << std::endl;
     return 0;
 }
