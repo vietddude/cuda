@@ -71,7 +71,6 @@
 # 	make loss
 # 	make optimizer
 
-
 # Compiler options
 NVCC = nvcc
 NVCC_FLAGS = -arch=sm_75
@@ -115,7 +114,7 @@ train: train.o $(OBJS) $(NETWORK_OBJS) $(MNIST_OBJS) $(LAYER_OBJS) $(LOSS_OBJS) 
 	$(NVCC) $(NVCC_FLAGS) --compile $< $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB) -o $@
 
 # Phony targets
-.PHONY: clean setup
+.PHONY: clean setup kernel_0 kernel_1 kernel_2
 
 clean:
 	rm -f train test
@@ -135,17 +134,17 @@ loss: $(LOSS_OBJS)
 
 optimizer: $(OPTIMIZER_OBJS)
 
-kernel_0: $(KERNEL_OBJS)
+kernel_0: src/layer/kernel/kernel.cu src/layer/kernel/kernel_forward.cu
 	rm -f src/layer/kernel/*.o
-	nvcc -arch=sm_75 --compile src/layer/kernel/kernel.cu -o src/layer/kernel/kernel.o $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB)
-	nvcc -arch=sm_75 --compile src/layer/kernel/kernel_forward.cu -o src/layer/kernel/kernel_forward.o $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB)
+	$(NVCC) $(NVCC_FLAGS) --compile src/layer/kernel/kernel.cu -o src/layer/kernel/kernel.o $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB)
+	$(NVCC) $(NVCC_FLAGS) --compile src/layer/kernel/kernel_forward.cu -o src/layer/kernel/kernel_forward.o $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB)
 
-kernel_1: $(KERNEL_OBJS)
+kernel_1: src/layer/kernel/kernel.cu src/layer/kernel/kernel_forward_1.cu
 	rm -f src/layer/kernel/*.o
-	nvcc -arch=sm_75 --compile src/layer/kernel/kernel.cu -o src/layer/kernel/kernel.o $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB)
-	nvcc -arch=sm_75 --compile src/layer/kernel/kernel_forward_1.cu -o src/layer/kernel/kernel_forward.o $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB)
+	$(NVCC) $(NVCC_FLAGS) --compile src/layer/kernel/kernel.cu -o src/layer/kernel/kernel.o $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB)
+	$(NVCC) $(NVCC_FLAGS) --compile src/layer/kernel/kernel_forward_1.cu -o src/layer/kernel/kernel_forward_1.o $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB)
 
-kernel_2: $(KERNEL_OBJS)
+kernel_2: src/layer/kernel/kernel.cu src/layer/kernel/kernel_forward_2.cu
 	rm -f src/layer/kernel/*.o
-	nvcc -arch=sm_75 --compile src/layer/kernel/kernel.cu -o src/layer/kernel/kernel.o $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB)
-	nvcc -arch=sm_75 --compile src/layer/kernel/kernel_forward_2.cu -o src/layer/kernel/kernel_forward.o $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB)
+	$(NVCC) $(NVCC_FLAGS) --compile src/layer/kernel/kernel.cu -o src/layer/kernel/kernel.o $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB)
+	$(NVCC) $(NVCC_FLAGS) --compile src/layer/kernel/kernel_forward_2.cu -o src/layer/kernel/kernel_forward_2.o $(INCLUDE_DIRS) $(CUDA_LIB_DIR) $(CUDART_LIB)
