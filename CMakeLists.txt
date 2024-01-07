@@ -1,19 +1,24 @@
-cmake_minimum_required (VERSION 3.0)
-project (myproject)
+cmake_minimum_required(VERSION 3.15)
+project(myproject)
 enable_language(CUDA)
-find_package(CUDA REQUIRED)	#find the CUDA libraries
-include_directories(${CUDA_INCLUDE_DIRS})	#Specify the CUDA include directories for the project
 
-include_directories ("${PROJECT_SOURCE_DIR}/Eigen")
-# 查找当前目录下的所有源文件
-# 并将名称保存到 DIR_SRCS 变量
+# Tìm và cấu hình CUDAToolkit
+find_package(CUDAToolkit REQUIRED)
+
+# Bao gồm các thư mục include cần thiết cho dự án
+include_directories(${CUDA_INCLUDE_DIRS})
+include_directories("${PROJECT_SOURCE_DIR}/Eigen")
+
+# Lấy tất cả các file nguồn trong thư mục hiện tại
 aux_source_directory(. DIR_SRCS)
-# 添加 math 子目录
+
+# Thêm thư mục src vào dự án
 add_subdirectory(src)
-# 指定生成目标 
 
-cuda_add_executable(test test.cc)
-cuda_add_executable(train train.cc)
+# Tạo các file thực thi cho test và train
+add_executable(test test.cc)
+add_executable(train train.cc)
 
-# 添加链接库
-target_link_libraries(demo MiniDNNLib)
+# Liên kết thư viện MiniDNNLib với các file thực thi
+target_link_libraries(test PRIVATE MiniDNNLib)
+target_link_libraries(train PRIVATE MiniDNNLib)
