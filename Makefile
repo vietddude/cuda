@@ -70,7 +70,6 @@
 # 	make layer
 # 	make loss
 # 	make optimizer
-
 # Compiler options
 NVCC = nvcc
 NVCC_FLAGS = -arch=sm_75
@@ -81,7 +80,8 @@ CUDA_LIB_DIR = -L/usr/local/cuda/lib64
 CUDART_LIB = -lcudart
 
 # Files
-SRCS = test.cc train.cc dnn.cc
+SRCS = test.cc train.cc
+DNN_SRCS = src/dnn.cc
 NETWORK_SRCS = src/network.cc
 MNIST_SRCS = src/mnist.cc
 LAYER_SRCS = src/layer/conv.cc src/layer/ave_pooling.cc src/layer/fully_connected.cc src/layer/max_pooling.cc src/layer/relu.cc src/layer/sigmoid.cc src/layer/softmax.cc
@@ -90,7 +90,7 @@ OPTIMIZER_SRCS = src/optimizer/sgd.cc
 KERNEL_SRCS = src/layer/kernel/kernel.cu src/layer/kernel/kernel_forward.cu src/layer/kernel/kernel_forward_1.cu src/layer/kernel/kernel_forward_2.cu
 
 # Object files
-OBJS = $(SRCS:.cc=.o)
+OBJS = $(SRCS:.cc=.o) $(DNN_SRCS:.cc=.o)
 NETWORK_OBJS = $(NETWORK_SRCS:.cc=.o)
 MNIST_OBJS = $(MNIST_SRCS:.cc=.o)
 LAYER_OBJS = $(LAYER_SRCS:.cc=.o)
