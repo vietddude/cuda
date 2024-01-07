@@ -14,8 +14,8 @@ train.o: train.cc
 	nvcc -arch=sm_75 --compile train.cc -I./ -L/usr/local/cuda/lib64 -lcudart
 
 ############################################################################
-dnn.o: dnn.cc
-	nvcc -arch=sm_75 --compile dnn.cc -I./ -L/usr/local/cuda/lib64 -lcudart
+# dnn.o: dnn.cc
+# 	nvcc -arch=sm_75 --compile dnn.cc -I./ -L/usr/local/cuda/lib64 -lcudart
 
 network.o: src/network.cc
 	nvcc -arch=sm_75 --compile src/network.cc -o src/network.o -I./ -L/usr/local/cuda/lib64 -lcudart
