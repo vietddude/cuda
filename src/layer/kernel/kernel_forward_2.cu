@@ -82,7 +82,7 @@ __global__ void forward_gpu_tiled(float *output, const float *input, const float
     }
 }
 
-__host__ void KernelInterface::forward_kernel(float *output_data, const float *input_data, const float *weight_data,
+__host__ void KernelInterface::forward_kernel(float *output_data, const float *input_data, const float *weight_data, const float *bias_data,
                                               const int num_samples, const int output_channel, const int input_channel,
                                               const int height_in, const int width_in, const int kernel_height)
 {
