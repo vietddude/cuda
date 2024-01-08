@@ -17,7 +17,7 @@ __global__ void forward_gpu_tiled(float *output, const float *input, const float
     int width_grid = ceil(1.0 * width_out / TILE_WIDTH);
 
     __shared__ float smem[(TILE_WIDTH + CONV_KERNEL_SIZE - 1) *
-                              (TILE_WIDTH + CONV_KERNEL_SIZE - 1) +
+                            (TILE_WIDTH + CONV_KERNEL_SIZE - 1) +
                           (CONV_KERNEL_SIZE * CONV_KERNEL_SIZE)];
 
     float *x_s = (float *)&smem[0];
@@ -36,7 +36,7 @@ __global__ void forward_gpu_tiled(float *output, const float *input, const float
     int w0 = threadIdx.x;               // index in TILE
     int h_out = h_in * TILE_WIDTH + h0; // real index in output feature map
     int w_out = w_in * TILE_WIDTH + w0; // real index in output feature map
-    // h and w is not center point, it's upper left corner point of Input image
+    // h_out and w_out is not center point, it's upper left corner point of Input image
 
     float acc = 0.0f;
 
