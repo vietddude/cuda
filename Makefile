@@ -1,7 +1,7 @@
 ##############################################################################
 test_cpu: test_cpu.o
 	nvcc -arch=sm_75 --compile src/layer/kernel/kernel.cu -o src/layer/kernel/kernel.o -I./ -L/usr/local/cuda/lib64 -lcudart 
-	nvcc -arch=sm_75 -o test_cpu -lm -lcuda -lrt test_cpu.o src/network.o src/mnist.o src/layer/*.o src/loss/*.o src/optimizer/*.o src/layer/kernel/kernel.o -I./ -L/usr/local/cuda/lib64 -lcudart
+	nvcc -arch=sm_75 -o test_cpu -lm -lcuda -lrt test_cpu.o src/network.o src/mnist.o src/layer/*.o src/loss/*.o src/optimizer/*.o src/layer/kernel/*.o -I./ -L/usr/local/cuda/lib64 -lcudart
 
 test_cpu.o: test_cpu.cc
 	nvcc -arch=sm_75 --compile test_cpu.cc -I./ -L/usr/local/cuda/lib64 -lcudart
