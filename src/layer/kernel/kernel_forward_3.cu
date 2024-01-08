@@ -78,7 +78,6 @@ __host__ void KernelInterface::forward_kernel(float *output_data, const float *i
     int z = height_grid * width_grid;
     dim3 blockSize(TILE_WIDTH, TILE_WIDTH, 1);
     dim3 gridSize(num_samples, output_channel, z);
-    printf("%d\n", output_channel * input_channel * kernel_height * kernel_height);
     // Launch the kernel
     basic_conv_forward_kernel<<<gridSize, blockSize>>>(device_output, device_input, device_weight, device_bias, num_samples, output_channel, input_channel, height_in, width_in, kernel_height);
 
