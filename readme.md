@@ -43,3 +43,5 @@ Navigate to the `cuda` folder:
 ```
 
 You can perform the same steps for other kernels by replacing `kernel_0` with the appropriate kernel identifier. Follow the identical procedure for each kernel.
+
+Video demo for this project: [Lenet-5 CNN CUDA](https://youtu.be/Q94Z-VZvkBI)
